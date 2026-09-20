@@ -54,7 +54,7 @@ export function App() {
     const receipt = params.get('receipt');
     if (receipt) selectReceipt(receipt);
     hydratedFromUrl.current = true;
-  }, [selectReceipt, setChapter, setFilters, filters.type, filters.era]);
+  }, [selectReceipt, setChapter, setFilters]);
 
   useEffect(() => {
     if (!hydratedFromUrl.current) return;
