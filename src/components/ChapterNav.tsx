@@ -44,10 +44,10 @@ export function ChapterNav({ chapters }: ChapterNavProps) {
                 type="button"
                 role="option"
                 aria-selected={active}
-                data-testid="chapter-item"
+                data-testid="chapter-nav-item"
                 data-chapter-id={chapter.id}
                 onClick={() => setChapter(chapter.id)}
-                className={`w-full rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary ${
+                className={`min-h-[44px] w-full rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary ${
                   active
                     ? 'border-primary/40 bg-surface-2 shadow-xs'
                     : 'border-transparent hover:border-border hover:bg-surface-2/60'

@@ -2,6 +2,8 @@
 
 **Track:** WebRush 2026 — Track 1: "Your Life, In Receipts"
 **Author:** Keshav Sood
+**Live:** https://webrush-2026-phi.vercel.app/
+**Code:** https://github.com/soodxkeshav/webrush-2026
 
 Three datasets. Three eras. One fictional life — told entirely through the digital receipts it left behind.
 
@@ -19,13 +21,24 @@ The provided data is not displayed as records. It is read as **three overlapping
 
 **Thesis:** the same person, six years apart. The app reveals what changed — from ritualized daily survival, to urban movement, to private late-night listening.
 
+## Features
+
+- **Chapter-based storytelling** — receipts grouped into narrative chapters with auto-generated titles and insights
+- **Connection discovery** — click any receipt to surface up to 6 related receipts, each with a weighted score and a human-readable reason
+- **12 auto-computed patterns** — peak listening hour, busiest month, top artists, subscription creep, most-visited city, fraud flags, music-to-purchase ratio, and more
+- **Full-text search** across titles, subtitles, locations, and music metadata
+- **Type & era filter buttons** plus a year-range timeline scrubber with a monthly density chart
+- **"Surprise me"** — jump to a random receipt and see its connections
+- **Light / dark / system themes** — persisted, with `prefers-reduced-motion` respected
+- **Responsive to 375px**, keyboard navigable, semantic HTML with ARIA labels and visible focus rings
+
 ## The Pipeline
 
 > Raw Data → Insights → Connections → Story
 
 - **Chapters** — receipts are bucketed by month and titled by their dominant signal (e.g. "A Month of Rituals", "The Night Sessions")
 - **Connections** — click any receipt to surface up to 6 related receipts, each with a human-readable reason
-- **Patterns** — ten auto-computed insights: peak listening hour, subscription creep, most-visited city, fraud count, late-night ratio…
+- **Patterns** — twelve auto-computed insights: peak listening hour, busiest month, subscription creep, most-visited city, fraud count, late-night ratio…
 - **Search, filters & timeline** — full-text search, type/era filters, and a timeline scrubber with a density chart
 - **Light & dark themes** — persisted, with `prefers-reduced-motion` respected
 

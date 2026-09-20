@@ -1,4 +1,4 @@
-import { AlertTriangle, CalendarDays, Clock, Flame, Hourglass, Layers, MapPin, Moon, Music2, Sparkles, Wallet } from 'lucide-react';
+import { AlertTriangle, ArrowLeftRight, CalendarDays, CalendarRange, Clock, Flame, Hourglass, Layers, MapPin, Moon, Music2, Sparkles, Wallet } from 'lucide-react';
 import type { Pattern, PatternIcon } from '../types/receipt';
 
 const ICONS: Record<PatternIcon, typeof Sparkles> = {
@@ -12,6 +12,8 @@ const ICONS: Record<PatternIcon, typeof Sparkles> = {
   alert: AlertTriangle,
   hourglass: Hourglass,
   layers: Layers,
+  busiest: CalendarRange,
+  ratio: ArrowLeftRight,
 };
 
 /** One pattern insight (design.md §8): icon tile, value, description, optional bar. */

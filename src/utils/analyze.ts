@@ -1,4 +1,4 @@
-import { MAX_CHAPTERS_PER_ERA } from '../constants';
+import { ERA_META, MAX_CHAPTERS_PER_ERA } from '../constants';
 import type { Chapter, Era, Pattern, Receipt } from '../types/receipt';
 import { formatAmount, formatAmountCompact, hourLabel, monthLabel, percent } from './format';
 import { monthKeyOf } from './parseDates';
@@ -331,6 +331,47 @@ export function discoverPatterns(receipts: Receipt[]): Pattern[] {
     description: 'Quiet Years · Wanderer · Night Sessions — the shape of one life in three acts.',
     accent: '#14b8a6',
   });
+
+  // Busiest single month across all eras.
+  const monthCounts = new Map<string, number>();
+  for (const r of receipts) {
+    const key = monthKeyOf(r.timestamp);
+    monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1);
+  }
+  const busiest = [...monthCounts.entries()].sort((a, b) => b[1] - a[1])[0];
+  push(
+    busiest && {
+      id: 'busiest-month',
+      icon: 'busiest' as const,
+      title: 'Busiest month',
+      value: monthLabel(busiest[0]),
+      description: `${busiest[1]} receipts in ${monthLabel(busiest[0])} — the loudest month on record.`,
+      accent: '#fb7185',
+    },
+  );
+
+  // Which era leaned hardest on music relative to money receipts?
+  const eraStats = (['quiet', 'wanderer', 'night'] as Era[])
+    .map((era) => {
+      const plays = receipts.filter((r) => r.era === era && r.type === 'music').length;
+      const money = receipts.filter((r) => r.era === era && r.type !== 'music').length;
+      return { era, plays, money, ratio: money > 0 ? plays / money : Number.POSITIVE_INFINITY };
+    })
+    .sort((a, b) => b.ratio - a.ratio)[0];
+  push(
+    eraStats &&
+      eraStats.plays > 0 && {
+        id: 'music-ratio',
+        icon: 'ratio' as const,
+        title: 'Music-to-purchase ratio',
+        value: ERA_META[eraStats.era].label,
+        description:
+          eraStats.money === 0
+            ? `${eraStats.plays} plays against zero money receipts — in this era, music was the only currency.`
+            : `${eraStats.plays} plays vs ${eraStats.money} money receipts — a ${(eraStats.plays / eraStats.money).toFixed(1)}× ratio, the highest of any era.`,
+        accent: '#8b5cf6',
+      },
+  );
 
   return patterns;
 }

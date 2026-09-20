@@ -62,7 +62,7 @@ export function ChapterView({ chapter }: ChapterViewProps) {
           <button
             type="button"
             onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
-            className="rounded-lg border border-border bg-surface px-5 py-2 text-sm font-semibold text-text-muted hover:bg-surface-2"
+            className="min-h-[44px] rounded-lg border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-text-muted hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             data-testid="load-more-receipts"
           >
             Show {Math.min(PAGE_SIZE, remaining)} more · {remaining} remaining

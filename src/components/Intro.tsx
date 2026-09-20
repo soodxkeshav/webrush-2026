@@ -48,8 +48,8 @@ export function Intro() {
       <button
         type="button"
         onClick={dismissIntro}
-        data-testid="intro-begin"
-        className="mt-8 inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-music px-6 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md active:scale-98 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        data-testid="begin-story"
+        className="mt-8 inline-flex min-h-[44px] items-center gap-2 rounded-lg bg-gradient-to-br from-primary to-music px-6 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <Play size={16} aria-hidden="true" />
         Begin the story

@@ -81,7 +81,9 @@ export type PatternIcon =
   | 'flame'
   | 'alert'
   | 'hourglass'
-  | 'layers';
+  | 'layers'
+  | 'busiest'
+  | 'ratio';
 
 /** One auto-computed insight for the Patterns panel. */
 export interface Pattern {

@@ -4,8 +4,6 @@ import { formatDate } from '../utils/format';
 
 const DensityChart = lazy(() => import('./DensityChart'));
 
-const YEAR_MS = 365.25 * 86_400_000;
-
 /** Timeline scrubber: narrows everything to a year window (memory.md: lives above the chapters). */
 export function TimelineScrubber() {
   const receipts = useAppStore((s) => s.receipts);
@@ -84,7 +82,7 @@ export function TimelineScrubber() {
             type="button"
             onClick={() => setDateRange(null)}
             data-testid="timeline-reset"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-text-muted transition-colors hover:bg-surface-2 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="min-h-[44px] rounded-lg border border-border px-3 py-2.5 text-xs font-semibold text-text-muted transition-colors hover:bg-surface-2 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             All years
           </button>
@@ -98,5 +96,3 @@ export function TimelineScrubber() {
     </section>
   );
 }
-
-void YEAR_MS;

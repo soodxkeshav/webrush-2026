@@ -21,7 +21,7 @@ export function EmptyState({ title, message, testid = 'empty-state', onRetry }: 
           type="button"
           onClick={onRetry}
           data-testid={`${testid}-retry`}
-          className="mt-5 rounded-lg bg-gradient-to-br from-primary to-music px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md active:scale-98 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="mt-5 inline-flex min-h-[44px] items-center rounded-lg bg-gradient-to-br from-primary to-music px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Try loading again
         </button>
