@@ -110,7 +110,7 @@ export function ChapterView({ chapter }: ChapterViewProps) {
       </header>
 
       <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reducedMotion ? 0 : 1.5, duration: 0.35 }}>
-        <ReceiptList receipts={visible} onSelect={selectReceipt} />
+        <ReceiptList receipts={visible} onSelect={selectReceipt} reducedMotion={reducedMotion} />
       </motion.div>
 
       {remaining > 0 && (

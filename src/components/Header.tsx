@@ -60,12 +60,12 @@ export function Header() {
         </div>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          <span title="Exploration progress" className="hidden rounded-full border border-border bg-surface-2 px-3 py-2 text-[11px] font-semibold text-text-muted xl:inline-flex">
-            Explored {Math.round(((visited.length + viewed.length) / Math.max(1, chapters.length + patterns.length)) * 100)}% · {visited.length + viewed.length}/{chapters.length + patterns.length} patterns
+          <span title="Exploration progress" data-testid="progress-meter" className="hidden rounded-full border border-border bg-surface-2 px-3 py-2 text-[11px] font-semibold text-text-muted xl:inline-flex">
+            Explored {Math.round(((visited.length + viewed.length) / Math.max(1, chapters.length + patterns.length)) * 100)}% · {visited.length + viewed.length}/{chapters.length + patterns.length} items
             <button type="button" data-testid="reset-progress" onClick={resetProgress} className="ml-2 text-primary hover:underline">Reset progress</button>
           </span>
           <button type="button" onClick={copyLink} data-testid="copy-link" className="inline-flex h-11 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-semibold text-text-muted hover:bg-surface-2"><Copy size={14} /> Copy link</button>
-          <button type="button" onClick={() => setHelpOpen(true)} aria-label="Keyboard shortcuts" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-2"><HelpCircle size={17} /><span className="sr-only">Keyboard shortcuts</span></button>
+          <button type="button" onClick={() => setHelpOpen(true)} data-testid="help-toggle" aria-label="Keyboard shortcuts" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-2"><HelpCircle size={17} /><span className="sr-only">Keyboard shortcuts</span></button>
           <button
             type="button"
             onClick={surprise}

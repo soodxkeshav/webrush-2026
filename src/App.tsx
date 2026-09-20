@@ -17,6 +17,8 @@ import { ConnectionPanel } from './components/ConnectionPanel';
 import { EmptyState } from './components/EmptyState';
 import { LoadingState } from './components/LoadingState';
 import { HelpOverlay } from './components/HelpOverlay';
+import { ERA_META, TYPE_META } from './constants';
+import type { Era, ReceiptType } from './types/receipt';
 
 /** Root: intro → header → (nav | chapter flow | patterns) with the connection overlay. */
 export function App() {
@@ -46,7 +48,9 @@ export function App() {
     if (chapter) setChapter(chapter);
     const type = params.get('type');
     const era = params.get('era');
-    if (type || era) setFilters({ ...(type ? { type: type as typeof filters.type } : {}), ...(era ? { era: era as typeof filters.era } : {}) });
+    const validType = type && (type === 'all' || type in TYPE_META) ? type as 'all' | ReceiptType : null;
+    const validEra = era && (era === 'all' || era in ERA_META) ? era as 'all' | Era : null;
+    if (validType || validEra) setFilters({ ...(validType ? { type: validType } : {}), ...(validEra ? { era: validEra } : {}) });
     const receipt = params.get('receipt');
     if (receipt) selectReceipt(receipt);
     hydratedFromUrl.current = true;
