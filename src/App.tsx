@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useEffect, useMemo } from 'react';
 import { useAppStore } from './store/useAppStore';
 import { useReceipts } from './hooks/useReceipts';
@@ -53,12 +54,30 @@ export function App() {
   if (!introDismissed) return <Intro />;
 
   return (
-    <>
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }}>
       <Header />
       <Layout
         nav={<ChapterNav chapters={chapters} />}
         main={
           <div className="space-y-5">
+            <div className="lg:hidden">
+              <label htmlFor="chapter-mobile" className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-text-faint">
+                Chapter
+              </label>
+              <select
+                id="chapter-mobile"
+                value={activeChapterId ?? ''}
+                onChange={(e) => setChapter(e.target.value)}
+                data-testid="chapter-select-mobile"
+                className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                {chapters.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.title} · {c.subtitle}
+                  </option>
+                ))}
+              </select>
+            </div>
             <FilterBar />
             <TimelineScrubber />
             {activeChapter && <ChapterView chapter={activeChapter} />}
@@ -67,6 +86,6 @@ export function App() {
         insights={<PatternInsights />}
       />
       <ConnectionPanel />
-    </>
+    </motion.div>
   );
 }

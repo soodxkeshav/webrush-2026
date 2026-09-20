@@ -47,20 +47,21 @@ export function ChapterNav({ chapters }: ChapterNavProps) {
                 data-testid="chapter-nav-item"
                 data-chapter-id={chapter.id}
                 onClick={() => setChapter(chapter.id)}
-                className={`min-h-[44px] w-full rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary ${
-                  active
-                    ? 'border-primary/40 bg-surface-2 shadow-xs'
-                    : 'border-transparent hover:border-border hover:bg-surface-2/60'
+                className={`min-h-[44px] w-full rounded-lg border-l-[3px] px-3 py-2.5 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary ${
+                  active ? 'bg-primary/[0.07] elevate-1' : 'border-transparent hover:bg-surface-2/70'
                 }`}
+                style={{ borderLeftColor: active ? ERA_META[chapter.era].color : 'transparent' }}
               >
                 <span className="flex items-center gap-2">
-                  <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: ERA_META[chapter.era].color }} aria-hidden="true" />
                   <span className={`truncate text-sm font-semibold ${active ? 'text-text' : 'text-text-muted'}`}>
                     {chapter.title}
                   </span>
+                  <span className="ml-auto shrink-0 rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-bold tabular-nums text-text-muted">
+                    {chapter.receiptCount}
+                  </span>
                 </span>
-                <span className="mt-0.5 block pl-4 text-[11px] font-medium uppercase tracking-wider text-text-faint">
-                  {chapter.subtitle} · {chapter.receiptCount}
+                <span className="mt-0.5 block text-[11px] font-medium uppercase tracking-wider text-text-faint">
+                  {chapter.subtitle}
                 </span>
               </button>
             </li>

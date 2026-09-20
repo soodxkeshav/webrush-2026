@@ -7,6 +7,10 @@
 
 Three datasets. Three eras. One fictional life — told entirely through the digital receipts it left behind.
 
+![Landing screen] [screenshot: light-mode intro hero]
+![Chapter view] [screenshot: chapter view with receipt cards and insights rail, light mode]
+![Dark mode] [screenshot: dark-mode chapter view with connection drawer open]
+
 ---
 
 ## The Concept
@@ -96,6 +100,30 @@ src/
 - [design.md](./design.md) — design system: type, color, spacing, motion
 - [tasks.md](./tasks.md) — the 6-hour build plan
 - [memory.md](./memory.md) — working memory, decisions log, evaluator notes
+
+## Design System
+
+- **Typeface:** Inter (400–800), with tabular numerals on all numeric displays
+- **Palette:** slate neutrals on an off-black/white base; indigo `#6366f1` primary; era accents — teal `#14b8a6` (Quiet Years), coral `#fb7185` (Wanderer), indigo `#6366f1` (Night Sessions); receipt types — violet music, amber purchase, blue transaction
+- **Elevation:** three-tier shadow scale (`--shadow-sm/md/lg`) as CSS variables, doubled in dark mode
+- **Accents:** `--accent-gradient` (indigo → violet) drives brand marks, CTAs, and the density-chart fill
+- **Shape & motion:** 12–16px radii, 8px spacing scale, hover lifts, spring-physics drawer, all gated by `prefers-reduced-motion`
+
+## Accessibility
+
+- Semantic HTML (`header`/`nav`/`main`/`aside`/`article`) with labeled regions
+- Every input has an associated `<label>`; icon-only buttons carry `aria-label`
+- Keyboard support: arrow-key chapter navigation, Esc closes the drawer, visible focus rings on all interactive elements
+- Filter buttons expose `aria-pressed`; the connection strength indicator has an aria-label
+- `prefers-reduced-motion` disables all animation; WCAG-AA contrast tokens in both themes
+
+## Performance
+
+- Fully client-side static build; no backend, no runtime APIs
+- Recharts density chart lazy-loaded via `React.lazy`; connection scoring runs only on click
+- Analysis (chapters + patterns) computed once on load and cached in the Zustand store
+- Malformed CSV rows are skipped, never fatal; error boundary wraps the app
+- Known tradeoff: the Inter webfont loads from Google Fonts (one external CSS request); everything else ships in the bundle
 
 ## Deployment
 

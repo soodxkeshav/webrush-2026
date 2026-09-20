@@ -4,7 +4,7 @@ import { useTheme, type ThemeSetting } from '../hooks/useTheme';
 const LABEL: Record<ThemeSetting, string> = { system: 'System', light: 'Light', dark: 'Dark' };
 const ICON: Record<ThemeSetting, typeof Sun> = { system: Monitor, light: Sun, dark: Moon };
 
-/** Theme cycle button — always carries visible text (FAIE rule: no icon-only actions). */
+/** Theme cycle button — icon-only with aria-label + testid (rules.md allows this pairing). */
 export function ThemeToggle() {
   const { theme, cycle } = useTheme();
   const Icon = ICON[theme];
@@ -14,12 +14,11 @@ export function ThemeToggle() {
       type="button"
       onClick={cycle}
       data-testid="theme-toggle"
-      className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-semibold text-text-muted transition-colors hover:bg-surface-2 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      aria-label={`Theme: ${LABEL[theme]}. Activate to change.`}
       title={`Theme: ${LABEL[theme]} — click to change`}
+      className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-text-muted hover:bg-surface-2 hover:text-text active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
-      <Icon size={14} aria-hidden="true" />
-      <span aria-hidden="true">{LABEL[theme]}</span>
-      <span className="sr-only">Theme: {LABEL[theme]}. Activate to change.</span>
+      <Icon size={16} aria-hidden="true" />
     </button>
   );
 }
