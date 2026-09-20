@@ -13,3 +13,4 @@ dist-ssr
 !package-lock.json
 !tsconfig.json
 !public/data/*.csv
+.vercel
