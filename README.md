@@ -2,7 +2,7 @@
 
 **Track:** WebRush 2026 — Track 1: "Your Life, In Receipts"
 **Author:** Keshav Sood
-**Live:** https://webrush-2026-phi.vercel.app/
+**Live URL:** https://webrush-2026-phi.vercel.app/
 **Code:** https://github.com/soodxkeshav/webrush-2026
 
 Three datasets. Three eras. One fictional life — told entirely through the digital receipts it left behind.
@@ -59,7 +59,7 @@ The provided data is not displayed as records. It is read as **three overlapping
 | Charts | Recharts |
 | Icons | Lucide React |
 
-## Getting Started
+## How to Run
 
 ```bash
 npm install

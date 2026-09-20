@@ -20,6 +20,9 @@ export interface AppState {
   selectedReceiptId: string | null;
   activeChapterId: string | null;
   introDismissed: boolean;
+  visitedChapterIds: string[];
+  viewedPatternIds: string[];
+  helpOpen: boolean;
 
   setReceipts: (receipts: Receipt[], skipped: number) => void;
   setLoading: (loading: boolean) => void;
@@ -32,6 +35,29 @@ export interface AppState {
   setChapter: (id: string | null) => void;
   dismissIntro: () => void;
   clearFilters: () => void;
+  markChapterVisited: (id: string) => void;
+  markPatternViewed: (id: string) => void;
+  resetProgress: () => void;
+  setHelpOpen: (open: boolean) => void;
+}
+
+const PROGRESS_KEY = 'lifeReceipts.progress.v1';
+function readProgress(): Pick<AppState, 'visitedChapterIds' | 'viewedPatternIds'> {
+  if (typeof window === 'undefined') return { visitedChapterIds: [], viewedPatternIds: [] };
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return { visitedChapterIds: [], viewedPatternIds: [] };
+    const parsed = JSON.parse(raw) as Partial<Pick<AppState, 'visitedChapterIds' | 'viewedPatternIds'>>;
+    return {
+      visitedChapterIds: Array.isArray(parsed.visitedChapterIds) ? parsed.visitedChapterIds : [],
+      viewedPatternIds: Array.isArray(parsed.viewedPatternIds) ? parsed.viewedPatternIds : [],
+    };
+  } catch {
+    return { visitedChapterIds: [], viewedPatternIds: [] };
+  }
+}
+function saveProgress(visitedChapterIds: string[], viewedPatternIds: string[]): void {
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify({ visitedChapterIds, viewedPatternIds }));
 }
 
 export const useAppStore = create<AppState>()((set) => ({
@@ -46,6 +72,8 @@ export const useAppStore = create<AppState>()((set) => ({
   selectedReceiptId: null,
   activeChapterId: null,
   introDismissed: false,
+  ...readProgress(),
+  helpOpen: false,
 
   setReceipts: (receipts, skipped) =>
     set((s) => ({
@@ -64,6 +92,25 @@ export const useAppStore = create<AppState>()((set) => ({
   dismissIntro: () => set({ introDismissed: true }),
   clearFilters: () =>
     set({ filters: { search: '', type: 'all', era: 'all' }, dateRange: null }),
+  markChapterVisited: (id) =>
+    set((s) => {
+      if (s.visitedChapterIds.includes(id)) return s;
+      const visitedChapterIds = [...s.visitedChapterIds, id];
+      saveProgress(visitedChapterIds, s.viewedPatternIds);
+      return { visitedChapterIds };
+    }),
+  markPatternViewed: (id) =>
+    set((s) => {
+      if (s.viewedPatternIds.includes(id)) return s;
+      const viewedPatternIds = [...s.viewedPatternIds, id];
+      saveProgress(s.visitedChapterIds, viewedPatternIds);
+      return { viewedPatternIds };
+    }),
+  resetProgress: () => {
+    saveProgress([], []);
+    set({ visitedChapterIds: [], viewedPatternIds: [] });
+  },
+  setHelpOpen: (helpOpen) => set({ helpOpen }),
 }));
 
 /** Case-insensitive full-text match against title, subtitle, location and music fields (PRD §5.5). */

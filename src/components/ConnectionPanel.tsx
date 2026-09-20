@@ -102,6 +102,7 @@ export function ConnectionPanel() {
                 className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border text-text-muted transition-colors hover:bg-surface-2 hover:text-text active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <X size={16} aria-hidden="true" />
+                <span className="sr-only">Close connections</span>
               </button>
             </header>
 

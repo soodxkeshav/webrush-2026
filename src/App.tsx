@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useAppStore } from './store/useAppStore';
 import { useReceipts } from './hooks/useReceipts';
 import { useChapters } from './hooks/useChapters';
@@ -16,6 +16,7 @@ import { PatternInsights } from './components/PatternInsights';
 import { ConnectionPanel } from './components/ConnectionPanel';
 import { EmptyState } from './components/EmptyState';
 import { LoadingState } from './components/LoadingState';
+import { HelpOverlay } from './components/HelpOverlay';
 
 /** Root: intro → header → (nav | chapter flow | patterns) with the connection overlay. */
 export function App() {
@@ -31,6 +32,60 @@ export function App() {
   const receipts = useAppStore((s) => s.receipts);
   const activeChapterId = useAppStore((s) => s.activeChapterId);
   const setChapter = useAppStore((s) => s.setChapter);
+  const filters = useAppStore((s) => s.filters);
+  const setFilters = useAppStore((s) => s.setFilters);
+  const selectedReceiptId = useAppStore((s) => s.selectedReceiptId);
+  const selectReceipt = useAppStore((s) => s.selectReceipt);
+  const setHelpOpen = useAppStore((s) => s.setHelpOpen);
+  const helpOpen = useAppStore((s) => s.helpOpen);
+  const hydratedFromUrl = useRef(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const chapter = params.get('chapter');
+    if (chapter) setChapter(chapter);
+    const type = params.get('type');
+    const era = params.get('era');
+    if (type || era) setFilters({ ...(type ? { type: type as typeof filters.type } : {}), ...(era ? { era: era as typeof filters.era } : {}) });
+    const receipt = params.get('receipt');
+    if (receipt) selectReceipt(receipt);
+    hydratedFromUrl.current = true;
+  }, [selectReceipt, setChapter, setFilters, filters.type, filters.era]);
+
+  useEffect(() => {
+    if (!hydratedFromUrl.current) return;
+    const params = new URLSearchParams();
+    if (activeChapterId) params.set('chapter', activeChapterId);
+    if (filters.type !== 'all') params.set('type', filters.type);
+    if (filters.era !== 'all') params.set('era', filters.era);
+    if (selectedReceiptId) params.set('receipt', selectedReceiptId);
+    const next = params.toString();
+    window.history.replaceState(null, '', next ? `${window.location.pathname}?${next}` : window.location.pathname);
+  }, [activeChapterId, filters.type, filters.era, selectedReceiptId]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent): void => {
+      const target = event.target as HTMLElement;
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) {
+        if (event.key === 'Escape') {
+          setFilters({ search: '' });
+          selectReceipt(null);
+          setHelpOpen(false);
+          target.blur();
+        }
+        return;
+      }
+      if (event.key === '?') { setHelpOpen(!helpOpen); return; }
+      if (event.key === '/') { event.preventDefault(); document.getElementById('receipt-search')?.focus(); return; }
+      const index = chapters.findIndex((chapter) => chapter.id === activeChapterId);
+      if (event.key === 'j' || event.key === 'ArrowDown') { event.preventDefault(); if (chapters[index + 1]) setChapter(chapters[index + 1].id); }
+      if (event.key === 'k' || event.key === 'ArrowUp') { event.preventDefault(); if (chapters[index - 1]) setChapter(chapters[index - 1].id); }
+      if (event.key === 's') { const pick = receipts[Math.floor(Math.random() * receipts.length)]; if (pick) selectReceipt(pick.id); }
+      if (event.key === 'Escape') { setHelpOpen(false); selectReceipt(null); setFilters({ search: '' }); }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [activeChapterId, chapters, filters, helpOpen, receipts, selectReceipt, setChapter, setFilters, setHelpOpen]);
 
   // Default to the first chapter once the archive is analyzed.
   useEffect(() => {
@@ -86,6 +141,7 @@ export function App() {
         insights={<PatternInsights />}
       />
       <ConnectionPanel />
+      {helpOpen && <HelpOverlay onClose={() => setHelpOpen(false)} />}
     </motion.div>
   );
 }

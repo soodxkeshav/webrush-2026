@@ -1,4 +1,4 @@
-import { ReceiptText, Search, Shuffle } from 'lucide-react';
+import { Copy, HelpCircle, ReceiptText, Search, Shuffle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAppStore } from '../store/useAppStore';
 import { SearchBar } from './SearchBar';
@@ -11,6 +11,13 @@ export function Header() {
   const search = useAppStore((s) => s.filters.search);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [toast, setToast] = useState(false);
+  const visited = useAppStore((s) => s.visitedChapterIds);
+  const viewed = useAppStore((s) => s.viewedPatternIds);
+  const chapters = useAppStore((s) => s.chapters);
+  const patterns = useAppStore((s) => s.patterns);
+  const resetProgress = useAppStore((s) => s.resetProgress);
+  const setHelpOpen = useAppStore((s) => s.setHelpOpen);
 
   useEffect(() => {
     const onScroll = (): void => setScrolled(window.scrollY > 8);
@@ -23,6 +30,11 @@ export function Header() {
     if (receipts.length === 0) return;
     const pick = receipts[Math.floor(Math.random() * receipts.length)];
     selectReceipt(pick.id);
+  };
+  const copyLink = async (): Promise<void> => {
+    await navigator.clipboard.writeText(window.location.href);
+    setToast(true);
+    window.setTimeout(() => setToast(false), 1800);
   };
 
   return (
@@ -48,6 +60,12 @@ export function Header() {
         </div>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <span title="Exploration progress" className="hidden rounded-full border border-border bg-surface-2 px-3 py-2 text-[11px] font-semibold text-text-muted xl:inline-flex">
+            Explored {Math.round(((visited.length + viewed.length) / Math.max(1, chapters.length + patterns.length)) * 100)}% · {visited.length + viewed.length}/{chapters.length + patterns.length} patterns
+            <button type="button" data-testid="reset-progress" onClick={resetProgress} className="ml-2 text-primary hover:underline">Reset progress</button>
+          </span>
+          <button type="button" onClick={copyLink} data-testid="copy-link" className="inline-flex h-11 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-semibold text-text-muted hover:bg-surface-2"><Copy size={14} /> Copy link</button>
+          <button type="button" onClick={() => setHelpOpen(true)} aria-label="Keyboard shortcuts" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-text-muted hover:bg-surface-2"><HelpCircle size={17} /><span className="sr-only">Keyboard shortcuts</span></button>
           <button
             type="button"
             onClick={surprise}
@@ -71,8 +89,10 @@ export function Header() {
             }`}
           >
             <Search size={17} aria-hidden="true" />
+            <span className="sr-only">Toggle search</span>
           </button>
         </div>
+        {toast && <div role="status" className="fixed right-4 top-20 z-50 rounded-lg bg-text px-4 py-2 text-sm font-semibold text-surface">Link copied</div>}
 
         {(searchOpen || search !== '') && (
           <div className="w-full md:hidden">

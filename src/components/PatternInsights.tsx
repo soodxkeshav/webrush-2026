@@ -1,6 +1,7 @@
 import { Sparkles } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { PatternCard } from './PatternCard';
+import { ActivityHeatmap } from './ActivityHeatmap';
 
 /** Patterns panel: twelve auto-computed insights, computed once on load (PRD §5.4). */
 export function PatternInsights() {
@@ -20,6 +21,7 @@ export function PatternInsights() {
           <PatternCard key={pattern.id} pattern={pattern} />
         ))}
       </div>
+      <ActivityHeatmap />
     </section>
   );
 }

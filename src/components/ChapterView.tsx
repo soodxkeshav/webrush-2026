@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowDown, MapPin, ReceiptText, Wallet } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ERA_META } from '../constants';
 import { useAppStore } from '../store/useAppStore';
 import type { Chapter, Receipt } from '../types/receipt';
@@ -17,7 +17,27 @@ const PAGE_SIZE = 50;
 export function ChapterView({ chapter }: ChapterViewProps) {
   const receipts = useAppStore((s) => s.receipts);
   const selectReceipt = useAppStore((s) => s.selectReceipt);
+  const markChapterVisited = useAppStore((s) => s.markChapterVisited);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [typedInsight, setTypedInsight] = useState('');
+  const reducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  useEffect(() => {
+    markChapterVisited(chapter.id);
+    setVisibleCount(PAGE_SIZE);
+    if (reducedMotion) {
+      setTypedInsight(chapter.insight);
+      return;
+    }
+    setTypedInsight('');
+    let index = 0;
+    const timer = window.setInterval(() => {
+      index += 1;
+      setTypedInsight(chapter.insight.slice(0, index));
+      if (index >= chapter.insight.length) window.clearInterval(timer);
+    }, 1500 / Math.max(1, chapter.insight.length));
+    return () => window.clearInterval(timer);
+  }, [chapter.id, chapter.insight, markChapterVisited, reducedMotion]);
 
   const inChapter = useMemo(
     () =>
@@ -66,7 +86,7 @@ export function ChapterView({ chapter }: ChapterViewProps) {
           {chapter.title}
         </h2>
         <p className="mt-3 max-w-2xl text-sm italic leading-relaxed text-text-muted" data-testid="chapter-insight">
-          {chapter.insight}
+          {typedInsight}
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2" data-testid="chapter-stats">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-muted">
@@ -89,7 +109,9 @@ export function ChapterView({ chapter }: ChapterViewProps) {
         </div>
       </header>
 
-      <ReceiptList receipts={visible} onSelect={selectReceipt} />
+      <motion.div initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reducedMotion ? 0 : 1.5, duration: 0.35 }}>
+        <ReceiptList receipts={visible} onSelect={selectReceipt} />
+      </motion.div>
 
       {remaining > 0 && (
         <div className="mt-6 text-center">

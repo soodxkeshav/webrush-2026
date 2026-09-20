@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { AlertTriangle, ArrowLeftRight, CalendarDays, CalendarRange, Clock, Flame, Hourglass, Layers, MapPin, Moon, Music2, Sparkles, Wallet } from 'lucide-react';
 import type { Pattern, PatternIcon } from '../types/receipt';
+import { useEffect, useRef } from 'react';
+import { useAppStore } from '../store/useAppStore';
 
 const ICONS: Record<PatternIcon, typeof Sparkles> = {
   weekday: CalendarDays,
@@ -20,8 +22,18 @@ const ICONS: Record<PatternIcon, typeof Sparkles> = {
 /** One analytics widget: 36px icon tile, bold value, muted description, optional ratio bar. */
 export function PatternCard({ pattern }: { pattern: Pattern }) {
   const Icon = ICONS[pattern.icon];
+  const ref = useRef<HTMLElement>(null);
+  const markPatternViewed = useAppStore((s) => s.markPatternViewed);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) markPatternViewed(pattern.id);
+    }, { threshold: 0.5 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [markPatternViewed, pattern.id]);
   return (
     <motion.article
+      ref={ref}
       data-testid="pattern-card"
       whileHover={{ y: -2 }}
       className="rounded-xl border border-border bg-surface p-4 transition-shadow hover:elevate-2"
